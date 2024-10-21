@@ -1,0 +1,40 @@
+{
+  "User Request": "For the question in the input picture, please use markdown to express it and then give me an answer.",
+  "Inputs": {
+    "images": "../assets/math_1.jpg",
+    "video": null,
+    "audio": null
+  },
+  "Tasks": {
+    "task_0": {
+      "task_type": "text_image_to_text",
+      "task_id": 0,
+      "task_dependency": -1,
+      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "inputs": {
+        "prompt": "For the question in the input picture, please use markdown to express it.",
+        "image": "../assets/math_1.jpg",
+        "video": null,
+        "audio": null,
+        "text": null,
+        "others": null
+      },
+      "outputs": "TASK_0_OUTPUTS"
+    },
+    "task_1": {
+        "task_type": "text_to_text",
+        "task_id": 1,
+        "task_dependency": 0,
+        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "inputs": {
+          "prompt": "The result of math problem recognition in markdown format from previous task is as follows. +{TASK_0_OUTPUTS}+ Give me an answer to the question.",
+          "image": null,
+          "video": null,
+          "audio": null,
+          "text": null,
+          "others": null
+        },
+        "outputs": "TASK_1_OUTPUTS"
+    }
+  }
+}

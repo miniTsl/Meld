@@ -1,0 +1,26 @@
+{
+  "User Request": "For the question in the input picture, please use markdown to express it and then give me an answer.",
+  "Inputs": {
+    "images": "../assets/math_1.jpg",
+    "video": null,
+    "audio": null
+  },
+  "Tasks": {
+    "task_0": {
+      "task_type": "text_image_to_text",
+      "task_id": 0,
+      "task_dependency": -1,
+      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "inputs": {
+        "prompt": "For the question in the input picture, please use markdown to express it. And then answer the question in the input picture.",
+        "image": "../assets/math_1.jpg",
+        "video": null,
+        "audio": null,
+        "text": null,
+        "others": null,
+        "max_output_size": 300
+      },
+      "outputs": "TASK_0_OUTPUTS"
+    }
+  }
+}

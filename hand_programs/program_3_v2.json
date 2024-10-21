@@ -1,0 +1,26 @@
+{
+  "User Request": "Tell me who the famous people in the picture are and tell me something interesting or important about them.",
+  "Inputs": {
+    "images": "../assets/famous_people_2.jpg",
+    "video": null,
+    "audio": null
+  },
+  "Tasks": {
+    "task_0": {
+      "task_type": "text_image_to_text",
+      "task_id": 0,
+      "task_dependency": -1,
+      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "inputs": {
+        "prompt": "Tell me who the famous people in the picture are and tell me something interesting or important about them.",
+        "image": "../assets/famous_people_2.jpg",
+        "video": null,
+        "audio": null,
+        "text": null,
+        "others": null,
+        "max_output_size": 200
+      },
+      "outputs": "TASK_0_OUTPUTS"
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "User Request": "Generate a short story about a hero taking an adventure in the forest and encountering a dragon. Then generate a picture based on the story script.",
+  "Inputs": {
+    "images": null,
+    "video": null,
+    "audio": null
+  },
+  "Tasks": {
+    "task_0": {
+      "task_type": "text_to_text",
+      "task_id": 0,
+      "task_dependency": -1,
+      "model": "Qwen/Qwen2.5-1.5B-Instruct",
+      "inputs": {
+        "prompt": "continue: a hero is taking an adventure in the forest and encountering a dragon. then ...",
+        "image": null,
+        "video": null,
+        "audio": null,
+        "text": null,
+        "others": null,
+        "max_output_size": 100
+      },
+      "outputs": "TASK_0_OUTPUTS"
+    },
+    "task_1": {
+        "task_type": "text_to_image",
+        "task_id": 1,
+        "task_dependency": 0,
+        "model": "stabilityai/stable-diffusion-xl-base-1.0",
+        "inputs": {
+          "prompt": "The result of story generation from previous task is as follows. +{TASK_0_OUTPUTS}+ Generate a picture based on the story script.",
+          "image": null,
+          "video": null,
+          "audio": null,
+          "text": "../results/picture_from_story.jpg",
+          "others": null,
+            "max_output_size": [1,1024,1024]
+        },
+        "outputs": "TASK_1_OUTPUTS"
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "User Request": "Can you tell me where is this place in the picture and generate some traveling advice if I go there sometime.",
+  "Inputs": {
+    "images": "../assets/places.jpg",
+    "video": null,
+    "audio": null
+  },
+  "Tasks": {
+    "task_0": {
+      "task_type": "text_image_to_text",
+      "task_id": 0,
+      "task_dependency": -1,
+      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "inputs": {
+        "prompt": "Can you tell me where is this place in the picture and generate some traveling advice if I go there sometime.",
+        "image": "../assets/places.jpg",
+        "video": null,
+        "audio": null,
+        "text": null,
+        "others": null
+      },
+      "outputs": "TASK_0_OUTPUTS"
+    }
+  }
+}

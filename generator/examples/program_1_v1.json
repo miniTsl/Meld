@@ -36,7 +36,7 @@
           "audio": null,
           "text": "../results/new_image.jpg",
           "others": null,
-            "max_output_size": [1,1024,1024]
+          "max_output_size": [1,1024,1024]
         },
         "outputs": "TASK_1_OUTPUTS"
     }

@@ -1,4 +1,4 @@
-from models import *
+from executors import *
 import torch
 
 TEXT_IMAGE_TO_TEXT_EXECUTOR = {

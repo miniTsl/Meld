@@ -11,3 +11,5 @@ question3 = "Who are the famous people in the picture are and tell me something 
 question4 = "For the question in the input picture, please use markdown to express it and then give me an answer."
 question5 = "Can you tell me where is this place in the picture and generate some traveling advice if I go there sometime."
 question6 = "Generate a short story about a hero taking an adventure in the forest and encountering a dragon. Then generate a picture based on the story script."
+
+question = "Based on the input picture, generate a short story about the scene and then generate a video for 10s based on the story script."

@@ -5,6 +5,8 @@ import json
 import os
 import torch
 
+os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+
 __TASKS__ = {
     "text_image_to_text": TextImageToTextTask,
     "text_to_image": TextToImageTask,

@@ -1,3 +1,5 @@
 eval*/
 results/
 programs/
+
+*.pyc

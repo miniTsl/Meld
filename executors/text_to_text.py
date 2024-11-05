@@ -24,12 +24,17 @@ class Qwen2Executor(BaseExecutor):
 
     def pre_process(self, messages):
         start_time = time.perf_counter_ns()
-        text = self.processor.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True
-        )
-        model_inputs = self.processor([text], return_tensors="pt").to(self.device)
+        # # apply_chat_template():
+        # # Converts a list of dictionaries with "role" and "content" keys to a list of token ids. This method is intended for use with chat models, and will read the tokenizer's chat_template attribute to determine the format and control tokens to use when converting.
+        # text = self.processor.apply_chat_template(
+        #     messages,
+        #     tokenize=False, # Whether to tokenize the output. If False, the output will be a string.
+        #     add_generation_prompt=True  # if this is set, a prompt with the token(s) that indicate the start of an assistant message will be appended to the formatted output. This is useful when you want to generate a response from the model. Note that this argument will be passed to the chat template, and so it must be supported in the template for this argument to have any effect.
+        # )
+        # model_inputs = self.processor([text], return_tensors="pt").to(self.device)
+        
+        # the above code are equivalent to the following code
+        model_inputs = self.processor.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt", return_dict=True).to(self.device)
         end_time = time.perf_counter_ns()
         self.latency += (end_time - start_time) / 1e9
 
@@ -91,7 +96,7 @@ class Gemm2Executor(BaseExecutor):
 
     def pre_process(self, messages):
         start_time = time.perf_counter_ns()
-        model_inputs = self.processor.apply_chat_template(messages, return_tensors="pt", return_dict=True).to(self.device)  # the format is for instruction-tuning models but should work for all
+        model_inputs = self.processor.apply_chat_template(messages, add_generation_prompt = True, return_tensors="pt", return_dict=True).to(self.device)  # the format is for instruction-tuning models but should work for all
         end_time = time.perf_counter_ns()
         self.latency += (end_time - start_time) / 1e9
 
@@ -103,7 +108,7 @@ class Gemm2Executor(BaseExecutor):
                 "role": "user",
                 "content": inputs["prompt"]
             },
-        ]
+        ]   # Gemma does not support System role
         input_data = self.pre_process(messages)
 
         start_time = time.perf_counter_ns()
@@ -111,7 +116,10 @@ class Gemm2Executor(BaseExecutor):
             **input_data,
             max_new_tokens=inputs["max_output_size"]
         )
-        response = self.processor.decode(generated_ids[0])
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(input_data.input_ids, generated_ids)
+        ]
+        response = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         end_time = time.perf_counter_ns()
         self.latency += (end_time - start_time) / 1e9
 
@@ -148,7 +156,7 @@ class LLaMAExecutor(BaseExecutor):
 
     def pre_process(self, messages):
         start_time = time.perf_counter_ns()
-        model_inputs = self.processor(messages["prompt"], return_tensors="pt").to("cuda")
+        model_inputs = self.processor.apply_chat_template(messages, add_generation_prompt = True, return_tensors="pt", return_dict=True).to(self.device)
         end_time = time.perf_counter_ns()
         self.latency += (end_time - start_time) / 1e9
 
@@ -156,6 +164,16 @@ class LLaMAExecutor(BaseExecutor):
 
     def generate_output(self, inputs: dict):
         messages = inputs
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a helpful assistant."
+            },
+            {
+                "role": "user",
+                "content": messages["prompt"]
+            },
+        ]
         input_data = self.pre_process(messages)
 
         start_time = time.perf_counter_ns()
@@ -163,7 +181,10 @@ class LLaMAExecutor(BaseExecutor):
             **input_data,
             max_new_tokens=inputs["max_output_size"]
         )
-        response = self.processor.decode(generated_ids[0], skip_special_tokens=True)
+        generated_ids = [
+            output_ids[len(input_ids):] for input_ids, output_ids in zip(input_data.input_ids, generated_ids)
+        ]
+        response = self.processor.batch_decode(generated_ids, skip_special_tokens=True)[0]
         end_time = time.perf_counter_ns()
         self.latency += (end_time - start_time) / 1e9
 

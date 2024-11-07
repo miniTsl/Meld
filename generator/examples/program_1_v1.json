@@ -1,44 +1,41 @@
 {
-  "User Request": "Tell me what animals are in the picture and generate another picture with the same kinds but in a Monet style.",
-  "User Inputs": {
-    "images": "../assets/cat_dog.jpg",
-    "video": null,
-    "audio": null,
-    "text": null,
+  "user_request": "Tell me what animals are in the picture and generate another picture with the same kinds but in a Monet style.",
+  "user_inputs": {
+    "images": "../assets/images/cat_dog.jpg",
+    "videos": null,
+    "audios": null,
+    "texts": null,
     "others": null
   },
-  "Tasks": {
+  "tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
-      "task_id": 0,
-      "task_dependency": -1,
+      "type": "image_text_to_text",
+      "id": 0,
+      "dependency": -1,
       "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "quant": "original",
+      "prompt": "What kind of animals are in the picture?",
       "inputs": {
-        "prompt": "What kind of animals are in the picture?",
-        "image": "../assets/cat_dog.jpg",
+        "image": "../assets/images/cat_dog.jpg",
         "video": null,
         "audio": null,
         "text": null,
-        "others": null,
-        "max_output_size": 300
+        "others": null
       },
-      "outputs": "TASK_0_OUTPUTS"
+      "generate_limit": [300],
+      "outputs": "Task_0_Outputs"
     },
     "task_1": {
-        "task_type": "text_to_image",
-        "task_id": 1,
-        "task_dependency": 0,
+        "type": "text_to_image",
+        "id": 1,
+        "dependency": 0,
         "model": "stabilityai/stable-diffusion-xl-base-1.0",
-        "inputs": {
-          "prompt": "The result of animal kind recognition from previous task is as follows. +{TASK_0_OUTPUTS}+ Generate a picture with the kinds of animals but in a Monet style.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": "../results/new_image.jpg",
-          "others": null,
-          "max_output_size": [1,1024,1024]
-        },
-        "outputs": "TASK_1_OUTPUTS"
+        "quant": "original",
+        "prompt": "Generate a picture in a Monet style with the kinds of animals in the text description: {Task_0_Outputs}",
+        "inputs": null,
+        "generate_limit": [30],
+        "outputs": "Task_1_Outputs"
     }
   }
 }
+

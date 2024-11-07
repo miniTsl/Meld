@@ -5,10 +5,10 @@ import json
 import os
 import torch
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "4"
+os.environ["CUDA_VISIBLE_DEVICES"] = "5"
 
 __TASKS__ = {
-    "text_image_to_text": TextImageToTextTask,
+    "image_text_to_text": ImageTextToTextTask,
     "text_to_image": TextToImageTask,
     "text_to_text": TextToTextTask
 }
@@ -16,21 +16,13 @@ __TASKS__ = {
 class Interpreter:
     def __init__(self, program:str):
         self.program = json.load(open(program, "r"))
-        self.user_request = self.program["User Request"]
-        self.inputs = self.program["Inputs"]
-        self.tasks_dict = self.program["Tasks"]
-        self.tasks = self.load_tasks()
+        self.user_request = self.program["user_request"]
+        self.user_inputs = self.program["user_inputs"]
+        self.tasks = self.program["tasks"]
         self.tasks_output_pool = {}
         self.tasks_latency = {} # s
-        self.tasks_memory = {}  # GB
-
-    def load_tasks(self):
-        task_objects = []
-        for _, task_config in self.tasks_dict.items():
-            task_type = task_config["task_type"]
-            task = __TASKS__[task_type](task_config)
-            task_objects.append(task)
-        return task_objects
+        self.tasks_model_memory = {}  # GB
+        self.tasks_gpu_memory = {}  # GB
 
     def check_dependency(self, task):
         # check dependency
@@ -43,60 +35,74 @@ class Interpreter:
             task.set_dependent_data(dependent_data)
 
     def execute(self):
-        for task in self.tasks:
-            self.check_dependency(task)
-            task.execute()
-            self.tasks_output_pool["task_" + str(task.task_id)] = task.outputs
-            self.tasks_latency["task_" + str(task.task_id)] = task.executor.get_latency()
-            self.tasks_memory["task_" + str(task.task_id)] = task.executor.get_memory()
-            task.release_executor() # release GPU memory
+        for task_config in self.tasks:
+            index = "task_" + str(task_config["id"])
+            task_type = task_config["type"]
+            task = __TASKS__[task_type](task_config)
+            
+            # clear GPU memory
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
+            torch.cuda.reset_peak_memory_stats()
+            try:    
+                self.check_dependency(task)
+                task.execute()
+            
+                max_memory = torch.cuda.max_memory_allocated() / 1024**3 # GB
+                self.tasks_output_pool[index] = task.outputs
+                self.tasks_latency[index] = task.executor.get_latency()
+                self.tasks_model_memory[index] = task.executor.get_memory()
+                self.tasks_gpu_memory[index] = max_memory
+            except Exception as e:
+                print(f"Error in task {index}: {e}")
+                self.tasks_output_pool[index] = "Error: " + str(e)
+                self.tasks_latency[index] = 0
+                self.tasks_model_memory[index] = 0
+                self.tasks_gpu_memory[index] = 0
+                continue
+            
+            del task
+            torch.cuda.empty_cache()
+            torch.cuda.synchronize()
 
-    def __str__(self):
-        return f"User Request: {self.user_request}\nInputs: {self.inputs}\nTasks: {self.tasks}"
-
-    def __repr__(self):
-        return f"User Request: {self.user_request}\nInputs: {self.inputs}\nTasks: {self.tasks}"
+    def save_evaluated_program(self, save_dir:str):
+        for task_config in self.program["tasks"]:
+            task_id = "task_" + str(task_config["id"])
+            task_config["eval"] = {}
+            task_config["eval"]["latency"] = self.tasks_latency[task_id]
+            task_config["eval"]["model memory"] = self.tasks_model_memory[task_id]
+            task_config["eval"]["gpu memory"] = self.tasks_gpu_memory[task_id]
+            task_config["eval"]["output_content"] = self.tasks_output_pool[task_id]
+            
+        with open(save_dir, "w") as f:
+            json.dump(self.program, f, indent=4)
 
 
 
 if __name__ == "__main__":
-    # run one program
+    # run one program to warm up
     for _ in range(10):
-        PROGRAM_FOLDER = "../programs/"
-        interpreter = Interpreter(PROGRAM_FOLDER + "program_2_Qwen2-VL-2B-Instruct_500_Qwen2.5-1.5B-Instruct_500.json")
+        PROGRAM_FOLDER = "/home/sunyi/Meld/programs/problem23/"
+        interpreter = Interpreter(PROGRAM_FOLDER + "program_1_v1.json")
         interpreter.execute()
         print(interpreter.tasks_output_pool)
         print(interpreter.tasks_latency)
-        print(interpreter.tasks_memory)
-
-    del interpreter
-    torch.cuda.empty_cache()
-    torch.cuda.synchronize()
+        print(interpreter.tasks_model_memory)
+        print(interpreter.tasks_gpu_memory)
+        del interpreter
+        torch.cuda.empty_cache()
+        torch.cuda.synchronize()
 
     # run multiple programs
-    PROGRAM_FOLDER = "../programs/"
+    PROGRAM_FOLDER = "/home/sunyi/Meld/programs/problem23/"
     for filename in os.listdir(PROGRAM_FOLDER):
         if filename.endswith(".json"):
             print(f"Start evaluating {filename}")
             file_path = os.path.join(PROGRAM_FOLDER, filename)
             interpreter = Interpreter(file_path)
             interpreter.execute()
-
-            # read the json file
-            with open(file_path, "r") as f:
-                program = json.load(f)
-            # first add new item "eval" into each task in the program
-            # write the latency, memory and output into each task in the program and save the new program into a new json
-            for task_id, task_config in program["Tasks"].items():
-                task_config["eval"] = {}
-                task_config["eval"]["latency"] = interpreter.tasks_latency[task_id]
-                task_config["eval"]["memory"] = interpreter.tasks_memory[task_id]
-                task_config["eval"]["output_content"] = interpreter.tasks_output_pool[task_id]
-
-            save_path = os.path.join("../eval_1020/", filename)
-            with open(save_path, "w") as f:
-                json.dump(program, f, indent=4)
-
+            save_dir = PROGRAM_FOLDER + "/eval/" + filename
+            interpreter.save_evaluated_program(save_dir)
             print(f"Finish evaluating {filename}")
             del interpreter
             torch.cuda.empty_cache()

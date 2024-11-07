@@ -1,0 +1,319 @@
+{
+    "programs": [
+        {
+            "user_request": "Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback.",
+            "user_inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                "others": null
+            },
+            "tasks": [
+                {
+                    "type": "text_to_text",
+                    "id": 0,
+                    "dependency": -1,
+                    "model": "google/gemma-2-2b-it",
+                    "quant": "original",
+                    "prompt": "Summarize the recurring themes in the provided customer feedback text.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        600
+                    ],
+                    "outputs": "Task_0_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 1,
+                    "dependency": 0,
+                    "model": "meta-llama/Llama-3.2-3B-Instruct",
+                    "quant": "original",
+                    "prompt": "Based on the summarized themes: {Task_0_Outputs}, generate a proposal for improvements.",
+                    "inputs": null,
+                    "generate_limit": [
+                        800
+                    ],
+                    "outputs": "Task_1_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 2,
+                    "dependency": 1,
+                    "model": "google/gemma-2-9b-it",
+                    "quant": "original",
+                    "prompt": "Compose a polite and professional reply for each feedback in the text, incorporating the original feedback and the improvement proposal: {Task_1_Outputs}.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        1000
+                    ],
+                    "outputs": "Task_2_Outputs"
+                }
+            ]
+        },
+        {
+            "user_request": "Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback.",
+            "user_inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                "others": null
+            },
+            "tasks": [
+                {
+                    "type": "text_to_text",
+                    "id": 0,
+                    "dependency": -1,
+                    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+                    "quant": "original",
+                    "prompt": "Identify and summarize the recurring themes from the customer feedback text provided.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        500
+                    ],
+                    "outputs": "Task_0_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 1,
+                    "dependency": 0,
+                    "model": "google/gemma-2-9b-it",
+                    "quant": "original",
+                    "prompt": "Create a proposal for improvement based on the following themes: {Task_0_Outputs}.",
+                    "inputs": null,
+                    "generate_limit": [
+                        700
+                    ],
+                    "outputs": "Task_1_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 2,
+                    "dependency": 1,
+                    "model": "google/gemma-2-2b-it",
+                    "quant": "original",
+                    "prompt": "Write professional replies to each feedback according to the proposal: {Task_1_Outputs} and the original content.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        800
+                    ],
+                    "outputs": "Task_2_Outputs"
+                }
+            ]
+        },
+        {
+            "user_request": "Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback.",
+            "user_inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                "others": null
+            },
+            "tasks": [
+                {
+                    "type": "text_to_text",
+                    "id": 0,
+                    "dependency": -1,
+                    "model": "meta-llama/Llama-3.2-1B-Instruct",
+                    "quant": "original",
+                    "prompt": "Extract and summarize the key themes from the customer feedback document.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        600
+                    ],
+                    "outputs": "Task_0_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 1,
+                    "dependency": 0,
+                    "model": "Qwen/Qwen2.5-0.5B-Instruct",
+                    "quant": "original",
+                    "prompt": "Draft a proposal for improvements based on the summary: {Task_0_Outputs}.",
+                    "inputs": null,
+                    "generate_limit": [
+                        500
+                    ],
+                    "outputs": "Task_1_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 2,
+                    "dependency": 1,
+                    "model": "meta-llama/Llama-3.2-3B-Instruct",
+                    "quant": "original",
+                    "prompt": "Create replies to each feedback using the proposal {Task_1_Outputs} and the feedback text.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        900
+                    ],
+                    "outputs": "Task_2_Outputs"
+                }
+            ]
+        },
+        {
+            "user_request": "Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback.",
+            "user_inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                "others": null
+            },
+            "tasks": [
+                {
+                    "type": "text_to_text",
+                    "id": 0,
+                    "dependency": -1,
+                    "model": "google/gemma-2-9b-it",
+                    "quant": "original",
+                    "prompt": "Please provide a summary of the recurring themes found in the customer feedback.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        700
+                    ],
+                    "outputs": "Task_0_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 1,
+                    "dependency": 0,
+                    "model": "Qwen/Qwen2.5-3B-Instruct",
+                    "quant": "original",
+                    "prompt": "Formulate a detailed proposal for improvement based on the themes identified: {Task_0_Outputs}.",
+                    "inputs": null,
+                    "generate_limit": [
+                        800
+                    ],
+                    "outputs": "Task_1_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 2,
+                    "dependency": 1,
+                    "model": "Qwen/Qwen2.5-7B-Instruct",
+                    "quant": "original",
+                    "prompt": "Craft personalized, professional replies for each feedback using both the proposal {Task_1_Outputs} and the original feedback text.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        1000
+                    ],
+                    "outputs": "Task_2_Outputs"
+                }
+            ]
+        },
+        {
+            "user_request": "Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback.",
+            "user_inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                "others": null
+            },
+            "tasks": [
+                {
+                    "type": "text_to_text",
+                    "id": 0,
+                    "dependency": -1,
+                    "model": "llava-hf/llava-1.5-13b-hf",
+                    "quant": "original",
+                    "prompt": "Analyze and summarize the recurring themes present in the customer feedback data.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        650
+                    ],
+                    "outputs": "Task_0_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 1,
+                    "dependency": 0,
+                    "model": "Qwen/Qwen2.5-1.5B-Instruct",
+                    "quant": "original",
+                    "prompt": "Develop a proposal for improvement leveraging the summarized themes: {Task_0_Outputs}.",
+                    "inputs": null,
+                    "generate_limit": [
+                        700
+                    ],
+                    "outputs": "Task_1_Outputs"
+                },
+                {
+                    "type": "text_to_text",
+                    "id": 2,
+                    "dependency": 1,
+                    "model": "meta-llama/Llama-3.2-3B-Instruct",
+                    "quant": "original",
+                    "prompt": "Compose courteous replies for each feedback item, guided by the proposal: {Task_1_Outputs} and the feedback details.",
+                    "inputs": {
+                        "image": null,
+                        "video": null,
+                        "audio": null,
+                        "text": "/home/sunyi/Meld/assets/text/problem_23.txt",
+                        "others": null
+                    },
+                    "generate_limit": [
+                        950
+                    ],
+                    "outputs": "Task_2_Outputs"
+                }
+            ]
+        }
+    ]
+}

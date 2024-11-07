@@ -1,23 +1,29 @@
 {
   "User Request": "For the question in the input picture, please use markdown to express it and then give me an answer.",
-  "Inputs": {
+  "User Inputs": {
     "images": "../assets/math_1.jpg",
-    "video": null,
-    "audio": null
+    "video": "",
+    "audio": "",
+    "text": "",
+    "others": ""
   },
   "Tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
+      "task_type": "image_text_to_text",
       "task_id": 0,
       "task_dependency": -1,
-      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_name": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_quant": "original",
       "inputs": {
         "prompt": "For the question in the input picture, please use markdown to express it.",
         "image": "../assets/math_1.jpg",
-        "video": null,
-        "audio": null,
-        "text": null,
-        "others": null
+        "video": "",
+        "audio": "",
+        "text": "",
+        "others": "",
+        "generate_limit": {
+          "max_new_tokens": 300
+        }
       },
       "outputs": "TASK_0_OUTPUTS"
     },
@@ -25,14 +31,18 @@
         "task_type": "text_to_text",
         "task_id": 1,
         "task_dependency": 0,
-        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_quant": "original",
         "inputs": {
           "prompt": "The result of math problem recognition in markdown format from previous task is as follows. +{TASK_0_OUTPUTS}+ Give me an answer to the question.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": null,
-          "others": null
+          "image": "",
+          "video": "",
+          "audio": "",
+          "text": "",
+          "others": "",
+          "generate_limit": {
+            "max_new_tokens": 500
+          }
         },
         "outputs": "TASK_1_OUTPUTS"
     }

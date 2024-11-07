@@ -1,0 +1,57 @@
+{
+    "user_request": "Given a medium-length news report. First, it needs to be summarized concisely. Then, the knowledge related to the original report should be expanded upon (like places, people and events). Finally, the expanded content should be translated into French.",
+    "user_inputs": {
+        "image": null,
+        "video": null,
+        "audio": null,
+        "text": "../assets/problem_22.txt",
+        "others": null
+    },
+    "tasks": {
+        "task_0": {
+            "type": "text_to_text",
+            "id": 0,
+            "dependency": -1,
+            "model": "Qwen/Qwen2.5-0.5B-Instruct",
+            "quant": "original",
+            "prompt": "Please summarize the news report from the given text material.",
+            "inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "../assets/problem_22.txt",
+                "others": null
+            },
+            "generate_limit": [150],
+            "outputs": "Task_0_Outputs"
+        },
+        "task_1": {
+            "type": "text_to_text",
+            "id": 1,
+            "dependency": -1,
+            "model": "Qwen/Qwen2.5-3B-Instruct",
+            "quant": "original",
+            "prompt": "Please expand upon the knowledge related to the original news report (like places, people and events) from the given text material.",
+            "inputs": {
+                "image": null,
+                "video": null,
+                "audio": null,
+                "text": "../assets/problem_22.txt",
+                "others": null
+            },
+            "generate_limit": [1000],
+            "outputs": "Task_1_Outputs"
+        },
+        "task_2": {
+            "type": "text_to_text",
+            "id": 2,
+            "dependency": 1,
+            "model": "google/gemma-2-2b-it",
+            "quant": "original",
+            "prompt": "Please translate the content into French. The content is as follows: {Task_1_Outputs}.",
+            "inputs": null,
+            "generate_limit": [1000],
+            "outputs": "Task_2_Outputs"
+        }
+    }
+  }

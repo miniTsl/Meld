@@ -1,8 +1,56 @@
 import torch
 from PIL import Image
 import time
-from base import BaseExecutor
+from .base import BaseExecutor
 
+
+# class TextToTextExecutor(BaseExecutor):
+#     def __init__(self, model_name, model_quant=None, device="cuda"):
+#         super().__init__(model_name, model_quant, device)
+
+#     def load_model(self):
+#         from transformers import AutoModelForCausalLM
+#         self.model = AutoModelForCausalLM.from_pretrained(
+#             self.model_name,
+#             torch_dtype="auto",
+#             device_map="auto"
+#         )
+#         self.model.eval()
+
+#     def load_processor(self):
+#         from transformers import AutoTokenizer
+#         self.processor = AutoTokenizer.from_pretrained(self.model_name)
+
+#     def pre_process(self, messages):
+#         start_time = time.perf_counter_ns()
+#         model_inputs = self.processor(messages["prompt"], return_tensors="pt").to(self.device)
+#         end_time = time.perf_counter_ns()
+#         self.latency += (end_time - start_time) / 1e9
+
+#         return model_inputs
+
+#     def generate_output(self, inputs: dict):
+#         messages = inputs
+#         input_data = self.pre_process(messages)
+
+#         start_time = time.perf_counter_ns()
+#         generated_ids = self.model.generate(
+#             **input_data,
+#             max_new_tokens=inputs["max_output_size"]
+#         )
+#         response = self.processor.decode(generated_ids[0], skip_special_tokens=True)
+#         end_time = time.perf_counter_ns()
+#         self.latency += (end_time - start_time) / 1e9
+
+#         return response
+
+
+def merge_text(inputs:dict):
+    if "text" in inputs and inputs["text"] != None:
+        with open(inputs["text"], "r") as f:
+            text = f.read()
+        inputs["prompt"] = inputs["prompt"] + " The text material is: " + text
+    return inputs
 
 ## qwen2.5
 class Qwen2Executor(BaseExecutor):
@@ -13,7 +61,7 @@ class Qwen2Executor(BaseExecutor):
         from transformers import AutoModelForCausalLM
         self.model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
-            torch_dtype="auto",
+            torch_dtype="auto", # torch.bfloat16
             device_map="auto"
         )
         self.model.eval()
@@ -40,7 +88,8 @@ class Qwen2Executor(BaseExecutor):
 
         return model_inputs
 
-    def generate_output(self, inputs: dict):
+    def generate_output(self, inputs: dict, generate_limit):
+        inputs = merge_text(inputs)
         messages = [
             {
                 "role": "system",
@@ -56,7 +105,7 @@ class Qwen2Executor(BaseExecutor):
         start_time = time.perf_counter_ns()
         generated_ids = self.model.generate(
             **input_data,
-            max_new_tokens=inputs["max_output_size"]
+            max_new_tokens=generate_limit[0]
         )
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(input_data.input_ids, generated_ids)
@@ -69,7 +118,7 @@ class Qwen2Executor(BaseExecutor):
 
 
 ## gemma2
-class Gemm2Executor(BaseExecutor):
+class Gemma2Executor(BaseExecutor):
     def __init__(self, model_name, model_quant=None, device="cuda"):
         super().__init__(model_name, model_quant, device)
 
@@ -102,7 +151,8 @@ class Gemm2Executor(BaseExecutor):
 
         return model_inputs
 
-    def generate_output(self, inputs: dict):
+    def generate_output(self, inputs: dict, generate_limit):
+        inputs = merge_text(inputs)
         messages = [
             {
                 "role": "user",
@@ -114,7 +164,7 @@ class Gemm2Executor(BaseExecutor):
         start_time = time.perf_counter_ns()
         generated_ids = self.model.generate(
             **input_data,
-            max_new_tokens=inputs["max_output_size"]
+            max_new_tokens=generate_limit[0]
         )
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(input_data.input_ids, generated_ids)
@@ -137,9 +187,9 @@ class LLaMAExecutor(BaseExecutor):
             quantization_config = BitsAndBytesConfig(load_in_8bit=True)
         elif self.model_quant == "4bit":
             quantization_config = BitsAndBytesConfig(load_in_4bit=True,
-                                                     bnb_4bit_compute_dtype=torch.bfloat16,
-                                                    bnb_4bit_use_double_quant=True,
-                                                    bnb_4bit_quant_type= "nf4")
+                                                    bnb_4bit_compute_dtype=torch.bfloat16,  # This sets the computational type which might be different than the input type. For example, inputs might be fp32, but computation can be set to bf16 for speedups.
+                                                    bnb_4bit_use_double_quant=True, # This flag is used for nested quantization where the quantization constants from the first quantization are quantized again.
+                                                    bnb_4bit_quant_type= "nf4") # This sets the quantization data type in the bnb.nn.Linear4Bit layers. Options are FP4 and NF4 data types which are specified by fp4 or nf4.
         else:
             quantization_config = None
         self.model = AutoModelForCausalLM.from_pretrained(
@@ -162,7 +212,8 @@ class LLaMAExecutor(BaseExecutor):
 
         return model_inputs
 
-    def generate_output(self, inputs: dict):
+    def generate_output(self, inputs: dict, generate_limit):
+        inputs = merge_text(inputs)
         messages = inputs
         messages = [
             {
@@ -179,7 +230,7 @@ class LLaMAExecutor(BaseExecutor):
         start_time = time.perf_counter_ns()
         generated_ids = self.model.generate(
             **input_data,
-            max_new_tokens=inputs["max_output_size"]
+            max_new_tokens=generate_limit[0]
         )
         generated_ids = [
             output_ids[len(input_ids):] for input_ids, output_ids in zip(input_data.input_ids, generated_ids)

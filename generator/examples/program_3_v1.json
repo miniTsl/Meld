@@ -1,23 +1,29 @@
 {
   "User Request": "Tell me who the famous people in the picture are and tell me something interesting or important about them.",
-  "Inputs": {
+  "User Inputs": {
     "images": "../assets/famous_people_2.jpg",
-    "video": null,
-    "audio": null
+    "video": "",
+    "audio": "",
+    "text": "",
+    "others": ""
   },
   "Tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
+      "task_type": "image_text_to_text",
       "task_id": 0,
       "task_dependency": -1,
-      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_name": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_quant": "original",
       "inputs": {
         "prompt": "Who are the famous people in the picture.",
         "image": "../assets/famous_people_2.jpg",
-        "video": null,
-        "audio": null,
-        "text": null,
-        "others": null
+        "video": "",
+        "audio": "",
+        "text": "",
+        "others": "",
+        "generate_limit": {
+          "max_new_tokens": 200
+        }
       },
       "outputs": "TASK_0_OUTPUTS"
     },
@@ -25,14 +31,18 @@
         "task_type": "text_to_text",
         "task_id": 1,
         "task_dependency": 0,
-        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_quant": "original",
         "inputs": {
           "prompt": "The result of people recognition from previous task is as follows. +{TASK_0_OUTPUTS}+ Tell me something interesting or important about them.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": null,
-          "others": null
+          "image": "",
+          "video": "",
+          "audio": "",
+          "text": "",
+          "others": "",
+          "generate_limit": {
+            "max_new_tokens": 1000
+          }
         },
         "outputs": "TASK_1_OUTPUTS"
     }

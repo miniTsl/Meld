@@ -1,7 +1,7 @@
 import torch
 from PIL import Image
 import time
-from base import BaseExecutor
+from .base import BaseExecutor
 
 ## qwen2-VL
 class Qwen2VLExecutor(BaseExecutor):
@@ -169,7 +169,7 @@ class LLaVAExecutor(BaseExecutor):
         super().__init__(model_name, model_quant, device)
 
     def load_model(self):
-        if "1.5" in self.model_name:
+        if "1.5" in self.model_name:    # for llava_1.5
             from transformers import LlavaForConditionalGeneration, BitsAndBytesConfig
             quantization_config = BitsAndBytesConfig(load_in_4bit=True) if self.model_quant == "4bit" else None
             self.torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
@@ -180,7 +180,7 @@ class LLaVAExecutor(BaseExecutor):
                 attn_implementation="flash_attention_2",
                 quantization_config=quantization_config # You shouldn't move a model that is dispatched using accelerate hooks.
             ).to(self.device)
-        else:
+        else:   # for llava_next
             from transformers import LlavaNextForConditionalGeneration, BitsAndBytesConfig
             quantization_config = BitsAndBytesConfig(load_in_4bit=True) if self.model_quant == "4bit" else None
             self.torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32

@@ -1,23 +1,29 @@
 {
   "User Request": "Can you tell me where is this place in the picture and generate some traveling advice if I go there sometime.",
-  "Inputs": {
+  "User Inputs": {
     "images": "../assets/places.jpg",
-    "video": null,
-    "audio": null
+    "video": "",
+    "audio": "",
+    "text": "",
+    "others": ""
   },
   "Tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
+      "task_type": "image_text_to_text",
       "task_id": 0,
       "task_dependency": -1,
-      "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_name": "Qwen/Qwen2-VL-2B-Instruct",
+      "model_quant": "original",
       "inputs": {
         "prompt": "Can you tell me where is this place in the picture?",
         "image": "../assets/places.jpg",
-        "video": null,
-        "audio": null,
-        "text": null,
-        "others": null
+        "video": "",
+        "audio": "",
+        "text": "",
+        "others": "",
+        "generate_limit": {
+          "max_new_tokens": 300
+        }
       },
       "outputs": "TASK_0_OUTPUTS"
     },
@@ -25,14 +31,18 @@
         "task_type": "text_to_text",
         "task_id": 1,
         "task_dependency": 0,
-        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_quant": "original",
         "inputs": {
           "prompt": "The result of place recognition from previous task is as follows. +{TASK_0_OUTPUTS}+ Give me some traveling advice if I go there sometime.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": null,
-          "others": null
+          "image": "",
+          "video": "",
+          "audio": "",
+          "text": "",
+          "others": "",
+          "generate_limit": {
+            "max_new_tokens": 500
+          }
         },
         "outputs": "TASK_1_OUTPUTS"
     }

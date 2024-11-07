@@ -1,23 +1,29 @@
 {
   "User Request": "Based on a photo of my dinner table with prepared food, write a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her.",
-  "Inputs": {
+  "User Inputs": {
     "images": "../assets/food.jpg",
-    "video": null,
-    "audio": null
+    "video": "",
+    "audio": "",
+    "text": "",
+    "others": ""
   },
   "Tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
+      "task_type": "image_text_to_text",
       "task_id": 0,
       "task_dependency": -1,
-      "model": "microsoft/Florence-2-large-ft",
+      "model_name": "llava-hf/llava-1.5-7b-hf",
+      "model_quant": "original",
       "inputs": {
-        "prompt": "<MORE_DETAILED_CAPTION>",
+        "prompt": "In this picture, What kind of food is on the table?",
         "image": "../assets/food.jpg",
-        "video": null,
-        "audio": null,
-        "text": null,
-        "others": null
+        "video": "",
+        "audio": "",
+        "text": "",
+        "others": "",
+        "generate_limit": {
+          "max_new_tokens": 300
+        }
       },
       "outputs": "TASK_0_OUTPUTS"
     },
@@ -25,14 +31,18 @@
         "task_type": "text_to_text",
         "task_id": 1,
         "task_dependency": 0,
-        "model": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_name": "Qwen/Qwen2.5-1.5B-Instruct",
+        "model_quant": "original",
         "inputs": {
           "prompt": "The result of food recognition from previous task is as follows. +{TASK_0_OUTPUTS}+ Generate a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": null,
-          "others": null
+          "image": "",
+          "video": "",
+          "audio": "",
+          "text": "",
+          "others": "",
+          "generate_limit": {
+            "max_new_tokens": 500
+          }
         },
         "outputs": "TASK_1_OUTPUTS"
     }

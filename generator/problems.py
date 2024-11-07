@@ -4,3 +4,23 @@ problem3 = "Who are the famous people in the picture are and tell me something i
 problem4 = "For the problem in the input picture, please use markdown to express it and then give me an answer."
 problem5 = "Can you tell me where is this place in the picture and generate some traveling advice if I go there sometime."
 problem6 = "Generate a short story about a hero taking an adventure in the forest and encountering a dragon. Then generate a picture based on the story script."
+
+problem7="Identify the architectural style of the building in the picture, then generate another image of a building in the same style but set in a futuristic, eco-friendly cityscape."
+problem8="Based on this image of a shopping list, list out the items neatly and categorize them by type. Then, generate a text message inviting a friend to join for grocery shopping with a reminder of these items."
+problem9="Analyze this image of a sports game and describe what sport is being played, the current state of the game, and suggest some fun facts about the teams playing."
+problem10="view the image of this museum exhibit, identify the types of artifacts displayed, and write a descriptive social media post inviting people to come visit with a brief description of the artifacts."
+problem11="Identify the cooking ingredients on this kitchen countertop and generate a recipe that could be made with those ingredients, including instructions for preparation."
+problem12="Based on a photograph of a mountain trail, describe the landscape features and recommend some essential gear for hiking there, along with a short travel itinerary."
+problem13="Observe this image of a dog and its surroundings, identify the dog breed, and generate a humorous social media caption as if the dog were inviting people to join its activities."
+problem14="Describe the mechanical parts shown in this image of an engine and suggest three ways to maintain them for longevity. Then, write a maintenance checklist to follow."
+problem15="Identify the type of plant in the garden image provided, then generate care instructions specific to that plant’s needs and give a tip for where it grows best."
+problem16="View this picture of a classroom, describe the subject being taught based on the visible materials, and write a creative summary for parents on what their children learned today."
+problem17="Identify the time of day and weather conditions in this landscape photo, then generate a poetic description as if inviting someone to join you for a walk."
+problem18="Examine the picture of this family gathering, describe the setting, and generate a heartfelt thank-you note for attending the event with highlights of the memorable moments."
+problem19="Observe this image of a workspace, identify any key equipment or items present, and then write a motivational message on productivity for social media."
+problem20="Look at the sports car image, identify its make and model, and write a short magazine-style review highlighting its performance, features, and target buyer."
+problem21="Based on this drawing of a futuristic spacecraft, describe its design features, then generate a backstory on the spacecraft’s origin and purpose in a sci-fi adventure."
+
+problem22 = "Given a medium-length news report in English. First, it needs to be summarized concisely. Then, the knowledge related to the original report should be expanded upon (like places, people and events). Finally, the expanded content should be translated into French."
+
+problem23="Given a collection of customer feedback in English, make a summary about the recurring themes. Then generate a proposal for improvement based on your analysis. Finally, generate replies to each feedback in a polite and professional manner according to both the proposal you generated and the original feedback."

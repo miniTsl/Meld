@@ -1,40 +1,40 @@
 {
-  "User Request": "Based on a photo of my dinner table with prepared food, write a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her.",
-  "Inputs": {
-    "images": "../assets/food.jpg",
-    "video": null,
-    "audio": null
+  "user_request": "Based on a photo of my dinner table with prepared food, write a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her.",
+  "user_inputs": {
+    "images": "../assets/images/food.jpg",
+    "videos": null,
+    "audios": null,
+    "texts": null,
+    "others": null
   },
-  "Tasks": {
+  "tasks": {
     "task_0": {
-      "task_type": "text_image_to_text",
-      "task_id": 0,
-      "task_dependency": -1,
+      "type": "image_text_to_text",
+      "id": 0,
+      "dependency": -1,
       "model": "Qwen/Qwen2-VL-2B-Instruct",
+      "quant": "original",
+      "prompt": "In this picture, What kind of food is on the table?",
       "inputs": {
-        "prompt": "In this picture, What kind of food is on the table?",
-        "image": "../assets/food.jpg",
+        "image": "../assets/images/food.jpg",
         "video": null,
         "audio": null,
         "text": null,
         "others": null
       },
-      "outputs": "TASK_0_OUTPUTS"
+      "generate_limit": [300],
+      "outputs": "Task_0_Outputs"
     },
     "task_1": {
-        "task_type": "text_to_text",
-        "task_id": 1,
-        "task_dependency": 0,
-        "model": "Qwen/Qwen2.5-1.5B-Instruct",
-        "inputs": {
-          "prompt": "The result of food recognition from previous task is as follows. +{TASK_0_OUTPUTS}+ Generate a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her.",
-          "image": null,
-          "video": null,
-          "audio": null,
-          "text": null,
-          "others": null
-        },
-        "outputs": "TASK_1_OUTPUTS"
+        "type": "text_to_text",
+        "id": 1,
+        "dependency": 0,
+        "model": "google/gemma-2-9b-it",
+        "quant": "8bit",
+        "prompt": "Generate a dinner invitation to Jane to invite her to my home for dinner. You can describe what food is already set for her. The description of food is: {Task_0_Outputs}",
+        "inputs": null,
+        "generate_limit": [500],
+        "outputs": "Task_1_Outputs"
     }
   }
 }

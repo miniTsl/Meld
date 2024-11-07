@@ -1,7 +1,7 @@
 import torch
 from PIL import Image
 import time
-from base import BaseExecutor
+from .base import BaseExecutor
 
 # TODO: now we only support single image generation
 
